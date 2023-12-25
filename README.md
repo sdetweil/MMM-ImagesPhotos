@@ -58,7 +58,7 @@ not fullscreen
 },
 ```
 fullscreen
-```
+```js
 {
 	module: "MMM-ImagesPhotos",
 	position: "fullscreen_below",
