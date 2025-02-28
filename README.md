@@ -40,11 +40,11 @@ The entry in `config.js` can include the following options:
 | `fill`             | true or false,  instead of color use a blurred copy of the image to fill around the image, <br>Default false.
 | `blur`             | the size of the pixel blur of the background fill, <br>Default 8
 | `sleepList`        | List of notifcations that will suspend module
-| `wakeList` 		| Lis of notifications that will resume module
+| `wakeList` 	     | List of notifications that will resume module
 | `showExifDate`     | true or false,  show date from photo's exif data if available. <br>Default true.
 | `showDateLabel`    | Prepend ExifDate with label "Photo Date:", <br>Default false
-| `BigDataGeoAPI` 	| API key for use with loading geo data based on lat/long in Exif Data. (Sign up here https://www.bigdatacloud.com/reverse-geocoding)
-| `showCity'        | true or false,  show city,state,country from photo's exif data if available. <br>Default true.
+| `BigDataGeoAPI`    | API key for use with loading geo data based on lat/long in Exif Data. (Sign up here https://www.bigdatacloud.com/reverse-geocoding)
+| `showCity`         | true or false,  show city,state,country from photo's exif data if available. <br>Default true.
 
 
 
