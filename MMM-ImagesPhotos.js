@@ -316,25 +316,24 @@ Module.register(ourModuleName, {
 				}
 	
 			//Do this if we want to see the city!						
-			if (this.config.showCity && this.config.BigDataGeoAPI != "") {
+				if (this.config.showCity && this.config.BigDataGeoAPI != "") {
 				if (photoImage.lat.length > 0){
 						//exifDate.innerHTML = exifDate.innerHTML + "<BR>" + "Lat: " + photoImage.lat + "<BR>" +  "Lon: " + photoImage.lon;								
 						
 						Log.log("Calling Fetch");
 						var strAPI = 'https://api-bdc.net/data/reverse-geocode?latitude=' +photoImage.lat + '&longitude='+ photoImage.lon + '&localityLanguage=en&key=' + this.config.BigDataGeoAPI
 						console.log(strAPI);
-						
+						Log.log("Calling Fetch for Reverse Geocode");
 						fetch(strAPI)
 						  .then(response => response.json()) // Convert response to JSON
 						  .then(data => {
-													
 							const city = data.city; // Extract city from response
 							const state = data.principalSubdivision
 							const country = data.countryName
 							
 							if(city == undefined || state == undefined || country == undefined){
-								Log.error("Unable to retrieve location. Double check your API Key.");
 								throw "Unable to retrieve location. Double check your API Key."
+								exifDate.innerHTML = exifDate.innerHTML + "<BR>Unable to retrieve location. Double check your API Key."
 							}else{
 								//console.log("City:", city);
 								exifDate.innerHTML = exifDate.innerHTML + "<BR>" + city + ", " + state + ", " + country
@@ -344,7 +343,7 @@ Module.register(ourModuleName, {
 					}
 			}else{
 				if(this.config.BigDataGeoAPI == ""){
-					Log.log("NO BIGDATAGEOAPI SET! Please get API KEY from https://www.bigdatacloud.com/reverse-geocoding");
+					L.log("NO BIGDATAGEOAPI SET! Please get API KEY from https://www.bigdatacloud.com/reverse-geocoding");
 					}
 			}		 
 				
@@ -513,7 +512,7 @@ Module.register(ourModuleName, {
 				if(this.config.BigDataGeoAPI == ""){
 					L.log("NO BIGDATAGEOAPI SET! Please get API KEY from https://www.bigdatacloud.com/reverse-geocoding");
 					}
-			}		 
+			}
 				
 			//Add to the DOM if we wanted either!	
 			if (this.config.showDateLabel || this.config.showExifDate){
