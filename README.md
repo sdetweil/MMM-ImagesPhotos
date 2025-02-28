@@ -44,7 +44,7 @@ The entry in `config.js` can include the following options:
 | `showExifDate`     | true or false,  show date from photo's exif data if available. <br>Default true.
 | `showDateLabel`    | Prepend ExifDate with label "Photo Date:", <br>Default false
 | `BigDataGeoAPI` 	| API key for use with loading geo data based on lat/long in Exif Data. (Sign up here https://www.bigdatacloud.com/reverse-geocoding)
-| `showCity'.        | true or false,  show city,state,country from photo's exif data if available. <br>Default true.
+| `showCity'        | true or false,  show city,state,country from photo's exif data if available. <br>Default true.
 
 
 
