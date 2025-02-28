@@ -300,7 +300,7 @@ Module.register(ourModuleName, {
 			if( this.config.showExifDate){
 					
 								
-					if (photoImage.exif == null || photoImage.exif == undefined) {
+					if (photoImage.exif == null || photoImage.exif == undefined || photoImage.exif =="") {
 						Log.log("No exif date found.");				
 					}else{
 						
@@ -336,14 +336,14 @@ Module.register(ourModuleName, {
 								exifDate.innerHTML = exifDate.innerHTML + "<BR>Unable to retrieve location. Double check your API Key."
 							}else{
 								//console.log("City:", city);
-								exifDate.innerHTML = exifDate.innerHTML + "<BR>" + city + ", " + state + ", " + country
+								exifDate.innerHTML = exifDate.innerHTML + "<BR>" + city + ", " + state + ", " + country.replaceAll("(the)", "")
 							}
 						  })
 						  .catch(error => Log.error("Error fetching data:", error));
 					}
 			}else{
 				if(this.config.BigDataGeoAPI == ""){
-					L.log("NO BIGDATAGEOAPI SET! Please get API KEY from https://www.bigdatacloud.com/reverse-geocoding");
+					Log.log("NO BIGDATAGEOAPI SET! Please get API KEY from https://www.bigdatacloud.com/reverse-geocoding");
 					}
 			}		 
 				
@@ -503,14 +503,14 @@ Module.register(ourModuleName, {
 								exifDate.innerHTML = exifDate.innerHTML + "<BR>Unable to retrieve location. Double check your API Key."
 							}else{
 								//console.log("City:", city);
-								exifDate.innerHTML = exifDate.innerHTML + "<BR>" + city + ", " + state + ", " + country
+								exifDate.innerHTML = exifDate.innerHTML + "<BR>" + city + ", " + state + ", " + country.replaceAll("(the)", "")
 							}
 						  })
 						  .catch(error => Log.error("Error fetching data:", error));
 					}
 			}else{
 				if(this.config.BigDataGeoAPI == ""){
-					L.log("NO BIGDATAGEOAPI SET! Please get API KEY from https://www.bigdatacloud.com/reverse-geocoding");
+					Log.log("NO BIGDATAGEOAPI SET! Please get API KEY from https://www.bigdatacloud.com/reverse-geocoding");
 					}
 			}
 				

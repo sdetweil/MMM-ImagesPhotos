@@ -87,30 +87,58 @@ module.exports = NodeHelper.create({
 		let imagesPhotos = [];
 		var exifLat = "";
 		var exifLon = "";
+		var exifDate= "";
 		
 		try{
 			(async () => {
 				for (let k of Object.keys(imgMap)) {
 						let curr = imgMap[k];
+						
 						let output = await exifr.parse(`${this.path_images[curr.id]}/${curr.img}`);
 						
 						if (output.latitude == undefined){
 							exifLat = "";
-							//Log.info("No Latitude");
+							if (this.config[id].debug) {
+								Log.info("No Latitude");
+							}
+						
 						}else{
 							exifLat = output.latitude ;
-							//Log.info(output.latitude);
+							if (this.config[id].debug) {
+								Log.info(output.latitude);
+							}
+							
 						}
 						
 						if (output.longitude == undefined){
 							exifLon = "";
-							//Log.info("No longitude");
+							if (this.config[id].debug) {
+								Log.info("No Longitude");
+							}
 						}else{
 							exifLon = output.longitude ;
-							//Log.info(output.longitude);
+							if (this.config[id].debug) {
+								Log.info(output.longitude);
+							}
 						}
 						
-						imagesPhotos.push({url: `/MMM-ImagesPhotos/photo/${curr.id}/${curr.img}`,exif: output.DateTimeOriginal,lat:`${exifLat}`, lon:`${exifLon}` });
+						if (output.DateTimeOriginal == undefined){
+							exifDate= ""
+							if (this.config[id].debug) {
+								Log.info("No Exif Date");
+							}
+						}else{
+							
+							exifDate= output.DateTimeOriginal
+							if (this.config[id].debug) {
+								Log.info(output.DateTimeOriginal);
+							}
+						}
+						
+							
+							
+						
+						imagesPhotos.push({url: `/MMM-ImagesPhotos/photo/${curr.id}/${curr.img}`,exif: `${exifDate}`,lat:`${exifLat}`, lon:`${exifLon}` });
 				}
 				res.send(imagesPhotos);
 			})();
