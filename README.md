@@ -39,6 +39,13 @@ The entry in `config.js` can include the following options:
 | `backgroundColor`  | Value for color used to fill around the image if not fullscreen,  can be #xxyyzz, like #808080 (grey),<br> if fill is true, the backgroundColor setting is ignored<br>Default 'black'
 | `fill`             | true or false,  instead of color use a blurred copy of the image to fill around the image, <br>Default false.
 | `blur`             | the size of the pixel blur of the background fill, <br>Default 8
+| `sleepList`        | List of notifcations that will suspend module
+| `wakeList` 		| Lis of notifications that will resume module
+| `showExifDate`     | true or false,  show date from photo's exif data if available. <br>Default true.
+| `showDateLabel`    | Prepend ExifDate with label "Photo Date:", <br>Default false
+| `BigDataGeoAPI` 	| API key for use with loading geo data based on lat/long in Exif Data. (Sign up here https://www.bigdatacloud.com/reverse-geocoding)
+| `showCity'.        | true or false,  show city,state,country from photo's exif data if available. <br>Default true.
+
 
 
 Here is an example of an entry in `config.js`
@@ -54,6 +61,12 @@ not fullscreen
   maxHeight: "500px",
   maxWidth:"500px",
   sequential: false  // process the image list randomly
+  sleepList: "SCREENSAVE_ENABLED", //Suspend when these notifications are recieved
+  wakeList: "SCREENSAVE_DISABLED", //Resume when these notifications are recieved
+  BigDataGeoAPI: "bXXX3",
+  showExifDate: true,
+  showDateLabel: false,
+  showCity: true,
  }
 },
 ```
@@ -69,7 +82,13 @@ fullscreen
 		backgroundColor: 'grey',  // not used if fill is true
 		fill: false,   // fill around image with blurred copy of image
 		blur: 10,   // only used if fill is true
-		sequential: false  // process the image list randomly
+		sequential: false,  // process the image list randomly
+		sleepList: "SCREENSAVE_ENABLED", //Suspend when these notifications are recieved
+  		wakeList: "SCREENSAVE_DISABLED", //Resume when these notifications are recieved
+  		BigDataGeoAPI: "bXXX3",
+  		showExifDate: true,
+  		showDateLabel: false,
+  		showCity: true,
 	}
 },
 ```
