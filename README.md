@@ -46,7 +46,7 @@ The entry in `config.js` can include the following options:
 | `BigDataGeoAPI`    | API key for use with loading geo data based on lat/long in Exif Data. (Sign up here https://www.bigdatacloud.com/reverse-geocoding)
 | `showCity`         | true or false,  show city,state,country from photo's exif data if available. <br>Default true.
 
-
+With the addition of pulling Exif data, it is slightly slower to load. This will increase the more images you have. Over 900 images will initally load and start displaying in just over 1 minute running on a Pi 4 Model B. 
 
 Here is an example of an entry in `config.js`
 not fullscreen
