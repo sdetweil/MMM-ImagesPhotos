@@ -89,7 +89,7 @@ module.exports = NodeHelper.create({
       Log.log(`gp id=${id}`);
     }
     const images = [];
-    const enabledTypes = ["image/jpeg", "image/png", "image/gif"];
+    const enabledTypes = ["image/jpeg", "image/png", "image/gif", "image/heic"];
 
     for (const idx in files) {
       if (idx in files) {
