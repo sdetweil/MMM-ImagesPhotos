@@ -285,6 +285,17 @@ Module.register(ourModuleName, {
         // Append this image to the div
         this.fg.appendChild(img);
 
+        /* set the image load error handler
+           report the image load failed
+           go load the next one with no delay
+        */   
+        img.onerror = (evt) => {
+          const eventImage = evt.currentTarget;
+          Log.error(
+            `image load failed=${eventImage.src}`
+          );
+          this.updateDom()
+        }
         /*
          * Set the onload event handler
          * The loadurl request will happen when the html is returned to MM and inserted into the dom.
