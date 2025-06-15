@@ -412,7 +412,18 @@ Module.register(ourModuleName, {
 				// Append this image to the div
 				this.fg.appendChild(img);
 				
-		//BEGIN EXIF ADDITION
+				
+				/* set the image load error handler
+				report the image load failed
+				go load the next one with no delay
+				*/   
+				img.onerror = (evt) => {
+					const eventImage = evt.currentTarget;
+					Log.error(`image load failed=${eventImage.src}`);
+					this.updateDom()
+				}
+	
+			//BEGIN EXIF ADDITION
 			//Remove existing div
 			try 
 			{
@@ -518,7 +529,7 @@ Module.register(ourModuleName, {
 			if (this.config.showDateLabel || this.config.showExifDate){
 				this.wrapper.appendChild(exifDate);
 			}
-		//END EXIF ADDITION						
+				//END EXIF ADDITION						
 							
 				/*
 				* Set the onload event handler
