@@ -11,7 +11,7 @@ This module reads the images from the _uploads_ directory inside the module.
 
 ```bash
 cd ~/MagicMirror/modules
-git clone https://github.com/gonzonia/MMM-ImagesPhotos
+git clone https://github.com/sdetweil/MMM-ImagesPhotos
 cd MMM-ImagesPhotos
 npm install
 ```
