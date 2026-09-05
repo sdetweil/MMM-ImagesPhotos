@@ -24,7 +24,7 @@ Module.register(ourModuleName, {
 		sequential: false,
 		sleepList: "SLEEP",
 		wakeList: "WAKE",
-		showExifDate: true,
+		showExifDate: false,
 		showDateLabel: false,
 		BigDataGeoAPI: "",
 		showCity: true,
