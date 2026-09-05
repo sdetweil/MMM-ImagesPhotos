@@ -18,3 +18,21 @@
 /* not fullscreen */
 .bgimage {
 }
+
+.imgDate {
+	  float:right;
+	  font-size:18px;
+	  line-height:100%;
+	  color:#FFF;
+	  text-shadow:1px 1px black;
+	  position:fixed;
+  	  top: var(--top);
+  	  left: var(--left);
+ 	  bottom: var(--bottom);
+  	  right: var(--right);
+      margin:50px;
+	  background-color: rgba(0,0,0,0.5);
+	  padding: 12px;
+	  border-radius: 36px;
+	  text-align:left;
+}
