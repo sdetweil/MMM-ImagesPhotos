@@ -94,6 +94,8 @@ module.exports = NodeHelper.create({
 				for (let k of Object.keys(imgMap)) {
 					let curr = imgMap[k];
 					
+					console.log(`getting Exifdata for ${this.path_images[curr.id]}/${curr.img}`)
+					try {
 					let output = await exifr.parse(`${this.path_images[curr.id]}/${curr.img}`);
 					
                     if (output == undefined){
@@ -144,7 +146,15 @@ module.exports = NodeHelper.create({
                             }
                         }
                     }
-					
+					}
+					catch (error){
+						exifLat = "";
+                        exifLon = "";
+                        exifDate= "";
+                        if (this.config[id].debug) {
+                            Log.info("No Exif Data Found");
+                        }
+					}
 					
 					
 					
