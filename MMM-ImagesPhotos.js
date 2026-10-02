@@ -52,12 +52,12 @@ Module.register(ourModuleName, {
 	* Requests new data from api url helper
 	*/
 	async getPhotos() {
-		const urlApHelper = `/MMM-ImagesPhotos/photos/${this.identifier}`;
+		const urlApHelper = `/MMM-ImagesPhotos/photos/${this.identifier}?t=${Date.now()}`;
 		const self = this;
 		let retry = true;
 
 		try {
-			const photosResponse = await fetch(urlApHelper);
+			const photosResponse = await fetch(urlApHelper, { cache: "no-store" });
 
 			if (photosResponse.ok) {
 				const photosData = await photosResponse.json();
@@ -70,16 +70,19 @@ Module.register(ourModuleName, {
 				Log.error(self.name, "Could not load photos.");
 			}
 
-			if (!photosResponse.ok) {
-				if (retry) {
-					self.scheduleUpdate(self.loaded ? -1 : self.config.retryDelay);
-				}
+			if (retry) {
+				self.scheduleUpdate();
 			}
 		} catch (error) {
 			Log.error(self.name, error);
+			self.scheduleUpdate(self.config.retryDelay);
 		}
 	},
 	notificationReceived(notification, payload, sender) {
+		if (notification === "MMM_IMAGESPHOTOS_REFRESH") {
+			this.getPhotos();
+			return;
+		}
 		// Hook to turn off messages about notiofications, clock once a second
 		if (notification === "ALL_MODULES_STARTED") {
 			const ourInstances = MM.getModules().withClass(ourModuleName);
@@ -123,10 +126,12 @@ Module.register(ourModuleName, {
 		if (typeof delay !== "undefined" && delay >= 0) {
 			nextLoad = delay;
 		}
-
-		const self = this;
-		setTimeout(() => {
-			self.getPhotos();
+		if (this.refreshTimer) {
+			clearTimeout(this.refreshTimer);
+		}
+		this.refreshTimer = setTimeout(() => {
+			this.refreshTimer = null;
+			this.getPhotos();
 		}, nextLoad);
 	},
 
@@ -317,7 +322,7 @@ Module.register(ourModuleName, {
 	
 			//Do this if we want to see the city!						
 				if (this.config.showCity && this.config.BigDataGeoAPI != "") {
-				if (photoImage.lat.length > 0){
+				if (photoImage.lat && photoImage.lat.length > 0){
 						//exifDate.innerHTML = exifDate.innerHTML + "<BR>" + "Lat: " + photoImage.lat + "<BR>" +  "Lon: " + photoImage.lon;								
 						
 						Log.log("Calling Fetch");
@@ -351,7 +356,7 @@ Module.register(ourModuleName, {
 				
 			//Add to the DOM if we wanted either!	
 			if (this.config.showDateLabel || this.config.showExifDate){
-				this.wrapper.appendChild(exifDate);
+				wrapper.appendChild(exifDate);
 			}
 		//END EXIF ADDITION						
 		
@@ -495,7 +500,7 @@ Module.register(ourModuleName, {
 				
 						//Do this if we want to see the city!						
 			if (this.config.showCity && this.config.BigDataGeoAPI != "") {
-				if (photoImage.lat.length > 0){
+				if (photoImage.lat && photoImage.lat.length > 0){
 						//exifDate.innerHTML = exifDate.innerHTML + "<BR>" + "Lat: " + photoImage.lat + "<BR>" +  "Lon: " + photoImage.lon;								
 						
 						Log.log("Calling Fetch");

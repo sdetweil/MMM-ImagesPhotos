@@ -52,18 +52,24 @@ module.exports = NodeHelper.create({
 	* Recive request and send response
 	*/
 	extraRoutes(id) {
+		this._routesReady = this._routesReady || {};
+		if (this._routesReady[id]) {
+			return;
+		}
+		this._routesReady[id] = true;
 		if (this.config[id].debug) {
 			Log.log(`setting path=${id}`);
 		}
 		const self = this;
 
 		this.expressApp.get(`/MMM-ImagesPhotos/photos/${id}`, (req, res) => {
+			res.set("Cache-Control", "no-store");
 			self.getPhotosImages(req, res, id);
 		});
 
 		this.expressApp.use(
-		`/MMM-ImagesPhotos/photo/${id}`,
-		express.static(self.path_images[id])
+			`/MMM-ImagesPhotos/photo/${id}`,
+			express.static(self.path_images[id])
 		);
 	},
 
@@ -76,96 +82,53 @@ module.exports = NodeHelper.create({
 		const directoryImages = this.path_images[id];
 		const imgs = this.getFiles(directoryImages, id);
 		const imgMap = this.getImages(imgs, id).map((img) => {
-			
 			if (this.config[id].debug) {
 				Log.log(`${id} have image=${img}`);
 			}
-			
-			return {id: id, img: img};
+			return { id: id, img: img };
 		});
 
-		let imagesPhotos = [];
-		var exifLat = "";
-		var exifLon = "";
-		var exifDate= "";
-		
-		try{
-			(async () => {
-				for (let k of Object.keys(imgMap)) {
-					let curr = imgMap[k];
-					
-					console.log(`getting Exifdata for ${this.path_images[curr.id]}/${curr.img}`)
-					try {
-					let output = await exifr.parse(`${this.path_images[curr.id]}/${curr.img}`);
-					
-                    if (output == undefined){
-                        exifLat = "";
-                        exifLon = "";
-                        exifDate= "";
-                        if (this.config[id].debug) {
-                            Log.info("No Exif Data Found");
-                        }
-                    }else{
-                        
-                        if (output.latitude == undefined){
-                            exifLat = "";
-                            if (this.config[id].debug) {
-                                Log.info("No Latitude");
-                            }
-                            
-                        }else{
-                            exifLat = output.latitude ;
-                            if (this.config[id].debug) {
-                                Log.info(output.latitude);
-                            }
-                            
-                        }
-                        
-                        if (output.longitude == undefined){
-                            exifLon = "";
-                            if (this.config[id].debug) {
-                                Log.info("No Longitude");
-                            }
-                        }else{
-                            exifLon = output.longitude ;
-                            if (this.config[id].debug) {
-                                Log.info(output.longitude);
-                            }
-                        }
-                        
-                        if (output.DateTimeOriginal == undefined){
-                            exifDate= "";
-                            if (this.config[id].debug) {
-                                Log.info("No Exif Date");
-                            }
-                        }else{
-                            
-                            exifDate= output.DateTimeOriginal
-                            if (this.config[id].debug) {
-                                Log.info(output.DateTimeOriginal);
-                            }
-                        }
-                    }
-					}
-					catch (error){
-						exifLat = "";
-                        exifLon = "";
-                        exifDate= "";
-                        if (this.config[id].debug) {
-                            Log.info("No Exif Data Found");
-                        }
-					}
-					
-					
-					
-					imagesPhotos.push({url: `/MMM-ImagesPhotos/photo/${curr.id}/${curr.img}`,exif: `${exifDate}`,lat:`${exifLat}`, lon:`${exifLon}` });
-				}
+		const imagesPhotos = [];
+
+		const finish = () => {
+			if (!res.headersSent) {
 				res.send(imagesPhotos);
-			})();
-			
-		} catch (error) {
+			}
+		};
+
+		(async () => {
+			for (const curr of imgMap) {
+				let exifLat = "";
+				let exifLon = "";
+				let exifDate = "";
+				try {
+					const output = await exifr.parse(`${this.path_images[curr.id]}/${curr.img}`);
+					if (output) {
+						if (output.latitude !== undefined) {
+							exifLat = output.latitude;
+						}
+						if (output.longitude !== undefined) {
+							exifLon = output.longitude;
+						}
+						if (output.DateTimeOriginal !== undefined) {
+							exifDate = output.DateTimeOriginal;
+						}
+					}
+				} catch (error) {
+					Log.error(`Error getting Exifdata for ${curr.img}: ${error}`);
+				}
+				imagesPhotos.push({
+					url: `/MMM-ImagesPhotos/photo/${curr.id}/${curr.img}`,
+					exif: `${exifDate}`,
+					lat: `${exifLat}`,
+					lon: `${exifLon}`,
+				});
+			}
+			finish();
+		})().catch((error) => {
 			Log.error(`Error getting Exifdata: ${error}`);
-		}
+			finish();
+		});
 	},
 	
 
