@@ -238,6 +238,7 @@ Module.register(ourModuleName, {
 	getDomnotFS() {
 		const self = this;
 		const wrapper = document.createElement("div");
+		wrapper.style.position = "relative";
 		const photoImage = this.randomPhoto();
 
 		if (photoImage) {
@@ -354,8 +355,9 @@ Module.register(ourModuleName, {
 				
 				
 				
-			//Add to the DOM if we wanted either!	
-			if (this.config.showDateLabel || this.config.showExifDate){
+			//Add to the DOM only when there is a date or a city label to show.
+			const showCityLabel = this.config.showCity && this.config.BigDataGeoAPI != "" && photoImage.lat && photoImage.lat.length > 0;
+			if (exifDate.innerHTML || showCityLabel) {
 				wrapper.appendChild(exifDate);
 			}
 		//END EXIF ADDITION						
@@ -374,6 +376,7 @@ Module.register(ourModuleName, {
 			// Create it once, try to reduce image flash on change
 
 			this.wrapper = document.createElement("div");
+			this.wrapper.style.position = "relative";
 			this.bk = document.createElement("div");
 			
 
@@ -483,7 +486,7 @@ Module.register(ourModuleName, {
 			if( this.config.showExifDate){
 					
 								
-					if (photoImage.exif == null || photoImage.exif == undefined) {
+					if (photoImage.exif == null || photoImage.exif == undefined || photoImage.exif == "") {
 						Log.log("No exif date found.");				
 					}else{
 						
@@ -530,8 +533,9 @@ Module.register(ourModuleName, {
 					}
 			}
 				
-			//Add to the DOM if we wanted either!	
-			if (this.config.showDateLabel || this.config.showExifDate){
+			//Add to the DOM only when there is a date or a city label to show.
+			const showCityLabel = this.config.showCity && this.config.BigDataGeoAPI != "" && photoImage.lat && photoImage.lat.length > 0;
+			if (exifDate.innerHTML || showCityLabel) {
 				this.wrapper.appendChild(exifDate);
 			}
 				//END EXIF ADDITION						
