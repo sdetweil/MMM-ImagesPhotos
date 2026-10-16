@@ -98,12 +98,25 @@ Module.register(ourModuleName, {
 		if( this.config.sleepList.includes(notification)) this.suspend(); 
 	},
 	startTimer() {
+		// MMM-pages suspends this module while its page is hidden.
+		// Arming a timer in that state lets the next tick get cleared
+		// before it can show a new photo.
+		if (this.suspended) {
+			return;
+		}
+		if (this.timer !== null) {
+			clearTimeout(this.timer);
+			this.timer = null;
+		}
 		const self = this;
 		self.timer = setTimeout(() => {
-			// Clear timer value for resume
 			self.timer = null;
 			if (self.suspended === false) {
-				self.updateDom(self.config.animationSpeed);
+				self.lastAdvance = Date.now();
+				// Speed 0 applies the new image immediately. An animated
+				// updateDom shares MagicMirror's show/hide timer with
+				// MMM-pages, and the page change cancels the photo swap.
+				self.updateDom(0);
 			}
 		}, this.config.updateInterval);
 	},
@@ -219,6 +232,15 @@ Module.register(ourModuleName, {
 		if (this.timer !== null) {
 			clearTimeout(this.timer);
 			this.timer = null;
+		}
+		// Swap to the next photo while this page is hidden, so the next
+		// time MMM-pages shows it, a new image is already in place.
+		// Skip if the slideshow just advanced, or the page hide and the
+		// interval would each move the album forward.
+		const justAdvanced = this.lastAdvance && Date.now() - this.lastAdvance < 1500;
+		if (!justAdvanced && this.loaded && this.photos && this.photos.length > 1) {
+			this.lastAdvance = Date.now();
+			this.updateDom(0);
 		}
 	},
 	resume() {
@@ -606,7 +628,7 @@ Module.register(ourModuleName, {
 		this.photos = data;
 		if (this.loaded === false) {
 			if (this.suspended === false) {
-				self.updateDom(self.config.animationSpeed);
+				self.updateDom(0);
 			}
 		}
 		this.loaded = true;
